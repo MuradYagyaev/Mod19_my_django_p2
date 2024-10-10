@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {% block title %} Мой магазин {% endblock %} </title>
+</head>
+<body>
+    <header>
+        {% block pagename %}
+            <h1> Заголовок страницы </h1>
+        {% endblock %}
+    </header>
+    <nav>
+        {% block menu %}
+            <h3><a href="/platform"> Главная </a></h3>
+            <h3><a href="/platform/games"> Каталог товаров </a></h3>
+            <h3><a href="/platform/cart"> Корзина </a></h3>
+        {% endblock %}
+    </nav>
+    <main>
+        {% block content %}
+            <h2> Тут ожидается некий контент, в зависимости от маршрута </h2>
+        {% endblock %}
+    </main>
+</body>
+</html>
