@@ -3,8 +3,9 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse
 
 from task1.forms import UserRegister
+from task1.models import *
 
-users = ['user1', 'user2', 'user3', 'user4', 'user5']
+buyers_list = []
 
 
 # Create your views here.
@@ -24,7 +25,8 @@ class Games(TemplateView):
     template_name = 'games.html'
     title = 'Каталог'
     pagename = 'Игры'
-    games = ['Atomic Heart', 'Cyberpunk 2077', 'PayDay 2', 'Doom 2']
+    # games = ['Atomic Heart', 'Cyberpunk 2077', 'PayDay 2', 'Doom 2']
+    games = Game.objects.all()
     extra_context = {
         'title': title,
         'pagename': pagename,
@@ -45,24 +47,27 @@ class Cart(TemplateView):
 
 
 def check_data(data):
-    if data['username'] in users:
+    buyers = Buyer.objects.all()
+    for buyer in buyers:
+        buyers_list.append(buyer.name)
+    if data['name'] in buyers_list:
         return 'Пользователь уже существует'
     elif data['password'] != data['repeat_password']:
         return 'Пароли не совпадают'
-    elif int(data['age']) < 18:
+    elif int(data['age']) < 16:
         return 'Вы должны быть старше 18'
-    return f'Приветствуем, {data['username']}!'
+    return f'Приветствуем, {data['name']}!'
 
 def sign_up_by_django(request):
     info = {}
     if request.method == 'POST':
         form = UserRegister(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            name = form.cleaned_data['name']
             password = form.cleaned_data['password']
             repeat_password = form.cleaned_data['repeat_password']
             age = form.cleaned_data['age']
-            info = {'username': username,
+            info = {'name': name,
                     'password': password,
                     'repeat_password': repeat_password,
                     'age': age,
@@ -70,6 +75,7 @@ def sign_up_by_django(request):
             check = check_data(info)
             if 'Приветствуем' in check:
                 info.update({'greetings': check})
+                Buyer.objects.create(name=name, password=password, age=age)
             else:
                 info.update({'error': check})
     else:
@@ -81,11 +87,11 @@ def sign_up_by_django(request):
 def sign_up_by_html(request):
     info = {}
     if request.method == 'POST':
-        username = request.POST.get('username')
+        name = request.POST.get('name')
         password = request.POST.get('password')
         repeat_password = request.POST.get('repeat_password')
         age = request.POST.get('age')
-        info = {'username': username,
+        info = {'name': name,
                 'password': password,
                 'repeat_password': repeat_password,
                 'age': age,
@@ -93,6 +99,7 @@ def sign_up_by_html(request):
         check = check_data(info)
         if 'Приветствуем' in check:
             info.update({'greetings': check})
+            Buyer.objects.create(name=name, password=password, age=age)
         else:
             info.update({'error': check})
     return render(request, 'registration_page.html', info)

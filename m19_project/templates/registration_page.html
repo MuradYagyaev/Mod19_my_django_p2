@@ -10,8 +10,8 @@
     <h3 align="center"> {{ error }} </h3>
     <form method="post">
         {% csrf_token %}
-            <label for="username"> Введите логин: </label>
-            <input type="text" id="username" name="username" maxlength="30" value="{{ username }}" required>
+            <label for="name"> Введите логин: </label>
+            <input type="text" id="name" name="name" maxlength="30" value="{{ name }}" required>
 
             <label for="password"> Введите пароль: </label>
             <input type="password" id="password" name="password" value="{{ password }}" minlength="8" required>

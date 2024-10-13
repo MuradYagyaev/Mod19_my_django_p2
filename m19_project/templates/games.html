@@ -15,7 +15,8 @@
 {% block content %}
     {% for game in games %}
         <ul>
-            <li><h3> {{ game }}  <button> Купить </button> </h3></li>
+            <li><h3> {{ game.title }} | {{ game.description }} Стоимость: {{ game.cost }}
+                <button> Купить </button> </h3></li>
         </ul>
     {% endfor %}
 {% endblock %}
